@@ -35,9 +35,6 @@ def ensure_ai_ready():
     except openai.RateLimitError:
         st.sidebar.warning("⚠️ OpenAI quota exceeded. Using fallback logic.")
         return False
-    except openai.InsufficientQuotaError:
-        st.sidebar.warning("⚠️ OpenAI quota insufficient. Using fallback logic.")
-        return False
     except Exception as e:
         if "429" in str(e) or "quota" in str(e).lower():
             st.sidebar.warning("⚠️ OpenAI quota exceeded. Using fallback logic.")
@@ -46,11 +43,10 @@ def ensure_ai_ready():
         return False
 
 def classify_issue_with_ai(description):
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not HAS_OPENAI or not api_key or api_key.startswith("sk-fake"):
+        return classify_issue_fallback(description)
     try:
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not HAS_OPENAI or not api_key or api_key.startswith("sk-fake"):
-            return classify_issue_fallback(description)
-
         client = openai.OpenAI(api_key=api_key)
         prompt = f'''
 Classify this maintenance issue into one of these categories: Plumbing, Electrical, HVAC, Structural, Appliance, Other.
@@ -66,9 +62,7 @@ Respond in format: Category: [category], Priority: [priority]
             max_tokens=50,
             temperature=0.3
         )
-
         result = response.choices[0].message.content.strip()
-
         category, priority = "Other", "Medium"
         if "Category:" in result:
             cat_part = result.split("Category:")[1].split(",")[0].strip()
@@ -78,11 +72,7 @@ Respond in format: Category: [category], Priority: [priority]
             pri_part = result.split("Priority:")[1].strip()
             if pri_part in ["High", "Medium", "Low"]:
                 priority = pri_part
-
         return category, priority
-    except (openai.RateLimitError, openai.InsufficientQuotaError):
-        logger.warning("OpenAI quota exceeded, using fallback")
-        return classify_issue_fallback(description)
     except Exception as e:
         if "429" in str(e) or "quota" in str(e).lower():
             logger.warning("OpenAI quota exceeded, using fallback")
@@ -156,7 +146,7 @@ Provide only a number (no currency symbol).
             return max(25.0, min(cost, 1000.0))
         except ValueError:
             return estimate_cost_fallback(category)
-    except (openai.RateLimitError, openai.InsufficientQuotaError):
+    except openai.RateLimitError:
         logger.warning("OpenAI quota exceeded for cost estimation")
         return estimate_cost_fallback(category)
     except Exception as e:
@@ -245,7 +235,7 @@ Provide a helpful, practical answer.
                     temperature=0.7
                 )
                 ai_response = response.choices[0].message.content.strip()
-            except (openai.RateLimitError, openai.InsufficientQuotaError):
+            except openai.RateLimitError:
                 ai_response = f"Thank you for your question about maintenance. Due to high demand, we're using our standard response system. Our team will review '{question}' and provide detailed assistance shortly."
             except Exception as e:
                 if "429" in str(e) or "quota" in str(e).lower():
