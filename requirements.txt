@@ -1,4 +1,13 @@
-# Add your project dependencies here
-flask
-sqlalchemy
+streamlit
 openai
+langchain
+chromadb
+python-dotenv
+pandas
+email-validator
+requests
+PyPDF2
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+plotly
