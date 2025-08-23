@@ -54,3 +54,4 @@ elif app_mode == "Knowledge Base":
     show_uploader()
 elif app_mode == "Calendar View":
     show_calendar_view()
+    

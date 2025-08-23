@@ -6,7 +6,7 @@ from app.db_init import init_db
 # 设置环境变量
 os.environ["AUTOMAINTAIN_DB_PATH"] = "./automaintain.db"
 os.environ["CHROMA_DB_DIR"] = "./chroma_db"
-os.environ["OPENAI_API_KEY"] = "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"  
+os.environ["GEMINI_API_KEY"] = "AIzaSyBq2J7dK7nm_FPCDkwYUeJFJp6T-F1jyGk"  
 os.environ["SMTP_USER"] = "haoran.liuaz@gmail.com" 
 os.environ["SMTP_PASS"] = "byay nnar hrcz rtfn"  
 os.environ["SMTP_SERVER"] = "smtp.gmail.com"  
@@ -23,4 +23,4 @@ os.makedirs("./chroma_db", exist_ok=True)
 print("🚀 Launching AutoMaintain system...")
 
 # 启动Streamlit应用
-subprocess.run(["streamlit", "run", "app/main.py", "--server.port", "8501", "--server.address", "0.0.0.0"])
+subprocess.run(["streamlit", "run", "app/main.py", "--server.port", "8501", "--server.address", "localhost"])
