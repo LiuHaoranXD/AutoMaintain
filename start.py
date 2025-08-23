@@ -3,12 +3,11 @@ import subprocess
 import time
 from app.db_init import init_db
 
-# 设置环境变量
 os.environ["AUTOMAINTAIN_DB_PATH"] = "./automaintain.db"
 os.environ["CHROMA_DB_DIR"] = "./chroma_db"
-os.environ["GEMINI_API_KEY"] = "AIzaSyBq2J7dK7nm_FPCDkwYUeJFJp6T-F1jyGk"  
-os.environ["SMTP_USER"] = "haoran.liuaz@gmail.com" 
-os.environ["SMTP_PASS"] = "byay nnar hrcz rtfn"  
+os.environ["GEMINI_API_KEY"] = ""  
+os.environ["SMTP_USER"] = "" 
+os.environ["SMTP_PASS"] = ""  
 os.environ["SMTP_SERVER"] = "smtp.gmail.com"  
 os.environ["SMTP_PORT"] = "587"  
 
